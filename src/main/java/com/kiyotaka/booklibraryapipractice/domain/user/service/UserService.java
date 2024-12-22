@@ -18,4 +18,6 @@ public interface UserService extends UserDetailsService {
 
     UserEntity findByOrThrow(UUID id);
 
+    boolean isExists(String email);
+
 }

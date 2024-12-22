@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -46,6 +45,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByOrThrow(UUID id) {
         return findBy(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public boolean isExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
