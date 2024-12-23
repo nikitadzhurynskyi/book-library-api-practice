@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      relativeToChangelogFile: true
+      file: 001_user_and_role_entities_changelog.sql
+  - include:
+      relativeToChangelogFile: true
+      file: 002_add_roles.sql

@@ -4,7 +4,7 @@ server:
 
 spring:
   config:
-    import: optional:file:.env[.properties]
+    import: file:.env[.properties]
   application:
     name: book-library-api-practice
   datasource:
@@ -14,3 +14,14 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: true
+  liquibase:
+    change-log: "classpath:/db/changelog/changelog.yml"
+
+book-library:
+  jwt:
+    access:
+      secret: ${ACCESS_TOKEN_SECRET}
+      expiration: ${ACCESS_TOKEN_EXPIRATION_IN_MILLIS}
+    refresh:
+      secret: ${REFRESH_TOKEN_SECRET}
+      expiration: ${REFRESH_TOKEN_EXPIRATION_IN_MILLIS}
