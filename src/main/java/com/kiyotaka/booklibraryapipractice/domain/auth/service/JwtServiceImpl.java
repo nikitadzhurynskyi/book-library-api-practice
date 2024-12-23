@@ -3,7 +3,9 @@ package com.kiyotaka.booklibraryapipractice.domain.auth.service;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.AuthTokens;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.TokenClaims;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.TokenType;
+import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,10 +38,18 @@ public class JwtServiceImpl implements JwtService {
         );
     }
 
-    //TODO: complete method
     @Override
-    public boolean validateToken(String token, TokenType type) {
-        return false;
+    public boolean validateAccessToken(String token, UserEntity userEntity) {
+        try {
+            return isExpired(token, TokenType.ACCESS) && parseUsername(token, TokenType.ACCESS).equals(userEntity.getUsername());
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean validateRefreshToken(String token) {
+        return isExpired(token, TokenType.REFRESH);
     }
 
     @Override

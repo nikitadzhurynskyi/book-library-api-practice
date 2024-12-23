@@ -2,6 +2,7 @@ package com.kiyotaka.booklibraryapipractice.domain.auth.service;
 
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.AuthTokens;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.TokenClaims;
+import com.kiyotaka.booklibraryapipractice.domain.auth.model.TokenType;
 import com.kiyotaka.booklibraryapipractice.domain.auth.web.model.AuthRequest;
 import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
 import com.kiyotaka.booklibraryapipractice.domain.user.mapper.UserMapper;
@@ -53,6 +54,17 @@ public class AuthServiceImpl implements AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
                 authRequest.getPassword(),
                 userEntity.getAuthorities()));
+
+        return jwtService.generateTokens(new TokenClaims(userEntity.getEmail(), userEntity.getId()));
+    }
+
+    @Override
+    public AuthTokens refreshTokens(String refreshToken) {
+        if (!jwtService.validateRefreshToken(refreshToken)) {
+            throw new RuntimeException("Invalid refresh token.");
+        }
+        final UserEntity userEntity = userService.findByOrThrow(
+                jwtService.parseUserId(refreshToken, TokenType.REFRESH));
 
         return jwtService.generateTokens(new TokenClaims(userEntity.getEmail(), userEntity.getId()));
     }

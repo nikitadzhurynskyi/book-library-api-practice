@@ -8,4 +8,6 @@ public interface AuthService {
     UserResponse register(AuthRequest authRequest);
 
     AuthTokens login(AuthRequest authRequest);
+
+    AuthTokens refreshTokens(String refreshToken);
 }
