@@ -75,7 +75,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .subject(claims.getUsername())
                 .expiration(new Date(new Date().getTime() + getTokenExpirationByType(type)))
-                .id(claims.getUserId())
+                .id(claims.getUserId().toString())
                 .signWith(getSignKeyByType(type))
                 .compact();
     }

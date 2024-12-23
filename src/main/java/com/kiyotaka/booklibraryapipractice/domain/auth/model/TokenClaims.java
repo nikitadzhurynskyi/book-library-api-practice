@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+import java.util.UUID;
+
 @AllArgsConstructor
 @Setter
 @Getter
 public class TokenClaims {
     private String username;
 
-    private String userId;
-
-    // TODO: change to role class/enum
-    private String userRole;
+    private UUID userId;
 }

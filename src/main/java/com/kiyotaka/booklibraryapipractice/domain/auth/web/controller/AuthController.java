@@ -1,8 +1,12 @@
 package com.kiyotaka.booklibraryapipractice.domain.auth.web.controller;
 
+import com.kiyotaka.booklibraryapipractice.domain.auth.model.AuthTokens;
 import com.kiyotaka.booklibraryapipractice.domain.auth.service.AuthService;
 import com.kiyotaka.booklibraryapipractice.domain.auth.web.model.AuthRequest;
 import com.kiyotaka.booklibraryapipractice.domain.user.web.model.UserResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
+
+    @Value("${book-library.jwt.refresh.expiration}")
+    private int refreshTokenCookieMaxAgeInMillis;
+
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
@@ -23,5 +32,22 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody AuthRequest authRequest) {
         return new ResponseEntity<>(authService.register(authRequest), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public AuthTokens login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+        final AuthTokens authTokens = authService.login(authRequest);
+        addTokenToCookies(authTokens.getRefreshToken(), response);
+
+        return authTokens;
+    }
+
+    private void addTokenToCookies(String token, HttpServletResponse response) {
+        final Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, token);
+
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(refreshTokenCookieMaxAgeInMillis / 1000);
+
+        response.addCookie(cookie);
     }
 }
