@@ -1,6 +1,5 @@
 package com.kiyotaka.booklibraryapipractice.domain.book.entity;
 
-import com.kiyotaka.booklibraryapipractice.core.converter.StringListConverter;
 import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,11 +21,14 @@ public class BookEntity {
     @Column(nullable = false)
     private String title;
 
-    @Convert(converter = StringListConverter.class)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "authors", joinColumns = @JoinColumn(name = "book_id"))
     @Column(nullable = false)
     private List<String> authors;
 
-    @Convert(converter = StringListConverter.class)
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "book_id"))
     @Column(nullable = false)
     private List<String> genres;
 

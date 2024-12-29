@@ -48,13 +48,14 @@ public class AuthConfiguration {
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/books", "/api/books/{id}").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/books").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/books").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/books/{id}").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/api/books/download").hasAuthority("ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(customizer ->
                         customizer.sessionCreationPolicy(SessionCreationPolicy.NEVER))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

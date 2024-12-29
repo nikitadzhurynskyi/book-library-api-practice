@@ -7,6 +7,7 @@ import com.kiyotaka.booklibraryapipractice.domain.user.repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public UserEntity create(UserDto dto) {
         final UserEntity user = new UserEntity(dto.getEmail(), dto.getPassword());
