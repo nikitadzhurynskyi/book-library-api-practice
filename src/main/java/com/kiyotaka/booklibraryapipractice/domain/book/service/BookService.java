@@ -3,8 +3,9 @@ package com.kiyotaka.booklibraryapipractice.domain.book.service;
 import com.kiyotaka.booklibraryapipractice.domain.book.entity.BookEntity;
 import com.kiyotaka.booklibraryapipractice.domain.book.web.model.CreateBookRequest;
 import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
-import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,6 @@ public interface BookService {
 
     List<BookEntity> findMany();
 
-    List<BookEntity> findMany(Pageable pageable);
-
     void delete(Long id);
 
     List<BookEntity> getFavoriteBooks(UserEntity user);
@@ -26,4 +25,6 @@ public interface BookService {
     void removeFavorite(UserEntity user, Long bookId);
 
     void addFavorite(UserEntity user, Long bookId);
+
+    void loadToCSV(PrintWriter writer) throws IOException;
 }

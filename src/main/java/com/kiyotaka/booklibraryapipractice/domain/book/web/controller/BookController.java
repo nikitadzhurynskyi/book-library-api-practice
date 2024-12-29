@@ -6,11 +6,14 @@ import com.kiyotaka.booklibraryapipractice.domain.book.service.BookService;
 import com.kiyotaka.booklibraryapipractice.domain.book.web.model.BookResponse;
 import com.kiyotaka.booklibraryapipractice.domain.book.web.model.CreateBookRequest;
 import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @RequestMapping("/api/books")
@@ -64,5 +67,13 @@ public class BookController {
     public List<BookResponse> getFavorites(@AuthenticationPrincipal UserEntity user) {
         final List<BookEntity> favoriteBooks = bookService.getFavoriteBooks(user);
         return bookMapper.mapEntitiesToResponses(favoriteBooks);
+    }
+
+    @GetMapping("/download")
+    public void downloadBook(HttpServletResponse response) throws IOException {
+        final PrintWriter respWriter = response.getWriter();
+
+        response.setContentType("text/plain; charset=utf-8");
+        bookService.loadToCSV(respWriter);
     }
 }
