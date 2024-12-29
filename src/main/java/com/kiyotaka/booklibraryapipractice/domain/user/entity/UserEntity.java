@@ -1,5 +1,6 @@
 package com.kiyotaka.booklibraryapipractice.domain.user.entity;
 
+import com.kiyotaka.booklibraryapipractice.domain.book.entity.BookEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,6 +34,12 @@ public class UserEntity implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles;
+
+    @ManyToMany
+    @JoinTable(name = "user_book_entity",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private List<BookEntity> favoriteBooks;
 
     public UserEntity(String email, String password) {
         this.email = email;

@@ -1,4 +1,4 @@
-name: bool-library-api-practice
+name: book-library-api-practice
 services:
   db_service:
     image: postgres:alpine

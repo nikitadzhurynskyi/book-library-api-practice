@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: 002_add_roles.sql
+  - include:
+      relativeToChangelogFile: true
+      file: 003_create_book_entity.sql
