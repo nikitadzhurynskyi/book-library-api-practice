@@ -1,9 +1,11 @@
 package com.kiyotaka.booklibraryapipractice.domain.user.service;
 
+import com.kiyotaka.booklibraryapipractice.core.exception.BookLibraryException;
 import com.kiyotaka.booklibraryapipractice.domain.user.dto.UserDto;
 import com.kiyotaka.booklibraryapipractice.domain.user.entity.RoleEntity;
 import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
 import com.kiyotaka.booklibraryapipractice.domain.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -41,12 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity findByOrThrow(String email) {
-        return findBy(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return findBy(email).orElseThrow(() -> new BookLibraryException("User not found", HttpStatus.NOT_FOUND));
     }
 
     @Override
     public UserEntity findByOrThrow(UUID id) {
-        return findBy(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return findBy(id).orElseThrow(() -> new BookLibraryException("User not found", HttpStatus.NOT_FOUND));
     }
 
     @Override

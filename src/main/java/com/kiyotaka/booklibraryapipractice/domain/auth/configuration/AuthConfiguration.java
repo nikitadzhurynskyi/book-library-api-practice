@@ -1,5 +1,6 @@
 package com.kiyotaka.booklibraryapipractice.domain.auth.configuration;
 
+import com.kiyotaka.booklibraryapipractice.core.exception.handler.ExceptionFilter;
 import com.kiyotaka.booklibraryapipractice.domain.auth.filter.JwtAuthFilter;
 import com.kiyotaka.booklibraryapipractice.domain.user.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 
 @EnableWebSecurity
@@ -24,10 +26,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthConfiguration {
     private final UserService userService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final ExceptionFilter exceptionFilter;
 
-    public AuthConfiguration(UserService userService, JwtAuthFilter jwtAuthFilter) {
+    public AuthConfiguration(UserService userService, JwtAuthFilter jwtAuthFilter, ExceptionFilter exceptionFilter) {
         this.userService = userService;
         this.jwtAuthFilter = jwtAuthFilter;
+        this.exceptionFilter = exceptionFilter;
     }
 
     @Bean
@@ -54,7 +58,8 @@ public class AuthConfiguration {
                 )
                 .sessionManagement(customizer ->
                         customizer.sessionCreationPolicy(SessionCreationPolicy.NEVER))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionFilter, LogoutFilter.class);
 
         return http.build();
     }

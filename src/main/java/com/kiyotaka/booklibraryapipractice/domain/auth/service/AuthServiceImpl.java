@@ -1,5 +1,6 @@
 package com.kiyotaka.booklibraryapipractice.domain.auth.service;
 
+import com.kiyotaka.booklibraryapipractice.core.exception.BookLibraryException;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.AuthTokens;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.TokenClaims;
 import com.kiyotaka.booklibraryapipractice.domain.auth.model.TokenType;
@@ -8,6 +9,7 @@ import com.kiyotaka.booklibraryapipractice.domain.user.entity.UserEntity;
 import com.kiyotaka.booklibraryapipractice.domain.user.mapper.UserMapper;
 import com.kiyotaka.booklibraryapipractice.domain.user.service.UserService;
 import com.kiyotaka.booklibraryapipractice.domain.user.web.model.UserResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserResponse register(AuthRequest authRequest) {
         if (userService.isExists(authRequest.getEmail())) {
-            throw new RuntimeException("User already registered.");
+            throw new BookLibraryException("User already registered.", HttpStatus.FORBIDDEN);
         }
         authRequest.setPassword(passwordEncoder.encode(authRequest.getPassword()));
         final UserEntity userEntity = userService.create(userMapper.mapAuthRequestToUserDto(authRequest));
@@ -48,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         final UserEntity userEntity = userService.findByOrThrow(authRequest.getEmail());
 
         if (!passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword())) {
-            throw new RuntimeException("Invalid password.");
+            throw new BookLibraryException("Invalid password.", HttpStatus.UNAUTHORIZED);
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
@@ -61,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthTokens refreshTokens(String refreshToken) {
         if (!jwtService.validateRefreshToken(refreshToken)) {
-            throw new RuntimeException("Invalid refresh token.");
+            throw new BookLibraryException("Invalid refresh token.", HttpStatus.UNAUTHORIZED);
         }
         final UserEntity userEntity = userService.findByOrThrow(
                 jwtService.parseUserId(refreshToken, TokenType.REFRESH));

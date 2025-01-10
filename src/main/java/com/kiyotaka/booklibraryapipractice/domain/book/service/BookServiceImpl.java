@@ -1,5 +1,6 @@
 package com.kiyotaka.booklibraryapipractice.domain.book.service;
 
+import com.kiyotaka.booklibraryapipractice.core.exception.BookLibraryException;
 import com.kiyotaka.booklibraryapipractice.domain.book.entity.BookEntity;
 import com.kiyotaka.booklibraryapipractice.domain.book.repository.BookRepository;
 import com.kiyotaka.booklibraryapipractice.domain.book.web.model.CreateBookRequest;
@@ -8,6 +9,7 @@ import com.kiyotaka.booklibraryapipractice.domain.user.repository.UserRepository
 import jakarta.persistence.EntityManager;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +49,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity findByOrThrow(Long id) {
-        return findBy(id).orElseThrow(() -> new RuntimeException("Book not found."));
+        return findBy(id).orElseThrow(() -> new BookLibraryException("Book not found.", HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -97,7 +99,7 @@ public class BookServiceImpl implements BookService {
                 try {
                     csvPrinter.printRecord(bookEntity.getId(), bookEntity.getTitle(), bookEntity.getAuthors(), bookEntity.getGenres());
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new BookLibraryException(e.getMessage(), HttpStatus.BAD_REQUEST);
                 }
             });
 
