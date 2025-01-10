@@ -1,0 +1,42 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class authors {
+   book_id: bigint
+   authors: varchar(255)
+}
+class book_entity {
+   title: varchar(255)
+   id: bigint
+}
+class genres {
+   book_id: bigint
+   genres: varchar(255)
+}
+class role_entity {
+   name: varchar(255)
+}
+class user_book_entity {
+   book_id: bigint
+   user_id: uuid
+}
+class user_entity {
+   email: varchar(255)
+   password: varchar(255)
+   id: uuid
+}
+class user_role_entity {
+   role_id: varchar(255)
+   user_id: uuid
+}
+
+authors           -[#595959,plain]-^  book_entity      : "book_id:id"
+genres            -[#595959,plain]-^  book_entity      : "book_id:id"
+user_book_entity  -[#595959,plain]-^  book_entity      : "book_id:id"
+user_book_entity  -[#595959,plain]-^  user_entity      : "user_id:id"
+user_role_entity  -[#595959,plain]-^  role_entity      : "role_id:name"
+user_role_entity  -[#595959,plain]-^  user_entity      : "user_id:id"
+@enduml

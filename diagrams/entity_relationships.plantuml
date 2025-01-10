@@ -1,0 +1,32 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AbstractAuditable {
+   createdDate:  Date 
+   lastModifiedDate:  Date 
+}
+class AbstractPersistable {
+   id:  PK 
+}
+class BookEntity {
+   id:  Long 
+   authors:  List<String> 
+   genres:  List<String> 
+   title:  String 
+}
+class RoleEntity {
+   name:  String 
+}
+class UserEntity {
+   id:  UUID 
+   email:  String 
+   password:  String 
+}
+
+AbstractAuditable    -[#595959,plain]-^  AbstractPersistable 
+RoleEntity          "id:name" <-[#595959,plain]-> "name:id" UserEntity
+UserEntity          "id:id" <-[#595959,plain]-> "id:id" BookEntity
+@enduml

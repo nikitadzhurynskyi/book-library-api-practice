@@ -1,0 +1,44 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AuthConfiguration
+class AuthController
+class AuthRequest
+interface AuthService << interface >>
+class AuthServiceImpl
+class AuthTokens
+class BookController
+class BookEntity
+class BookLibraryApiPracticeApplication
+class BookLibraryException
+class BookLibraryExceptionHandler
+class BookMapper
+interface BookRepository << interface >>
+class BookResponse
+interface BookService << interface >>
+class BookServiceImpl
+class CreateBookRequest
+class ExceptionFilter
+class ExceptionResponse
+class JwtAuthFilter
+interface JwtService << interface >>
+class JwtServiceImpl
+class RoleEntity
+class TokenClaims
+enum TokenType << enumeration >>
+class UserDto
+class UserEntity
+class UserMapper
+interface UserRepository << interface >>
+class UserResponse
+interface UserService << interface >>
+class UserServiceImpl
+
+AuthServiceImpl                    -[#008200,dashed]-^  AuthService                       
+BookServiceImpl                    -[#008200,dashed]-^  BookService                       
+JwtServiceImpl                     -[#008200,dashed]-^  JwtService                        
+UserServiceImpl                    -[#008200,dashed]-^  UserService                       
+@enduml
