@@ -4,7 +4,6 @@ import com.kiyotaka.booklibraryapipractice.core.exception.BookLibraryException;
 import com.kiyotaka.booklibraryapipractice.core.model.ExceptionResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class BookLibraryExceptionHandler {
     @ExceptionHandler({BookLibraryException.class})
-    public ResponseEntity<ExceptionResponse> handleBookLibraryException(BookLibraryException ex, HttpServletResponse response) {
+    public ResponseEntity<ExceptionResponse> handleBookLibraryException(BookLibraryException ex) {
 
         final ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .message(ex.getLocalizedMessage())
